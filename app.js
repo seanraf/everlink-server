@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
+const linkRoutes = require("./routes/linkRoutes");
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ mongoose
 // Routes
 
 app.use("/api/users", userRoutes);
+app.use("/api/links", linkRoutes);
 
 app.use("/", (req, res) =>
   res.json({
