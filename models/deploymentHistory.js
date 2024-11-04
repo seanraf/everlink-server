@@ -1,12 +1,9 @@
 const mongoose = require("mongoose");
 
-const pageSchema = new mongoose.Schema(
+const DeploymentHistorySchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    url: {
+    domainList: [String],
+    taskId: {
       type: String,
       required: true,
     },
@@ -19,5 +16,5 @@ const pageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Page = mongoose.model("Page", pageSchema);
+const Page = mongoose.model("deployment_history", DeploymentHistorySchema);
 module.exports = Page;

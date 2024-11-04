@@ -4,12 +4,6 @@ const UserLinks = require("../models/linksModel");
 // Register User
 const curateLinks = async (req, res) => {
   const { links, theme, googleAnalyticsTag, createdBy } = req.body;
-  console.log(
-    "🚀 ~ curateLinks ~ links, theme, googleAnalyticsTag:",
-    links,
-    theme,
-    googleAnalyticsTag
-  );
   try {
     if (!links || links.length === 0) {
       return res.status(400).json({ message: "Links are required" });

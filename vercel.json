@@ -20,6 +20,14 @@
       "dest": "/app.js"
     },
     {
+      "src": "/api/4everland",
+      "dest": "/app.js"
+    },
+    {
+      "src": "/api/deploymentHistory",
+      "dest": "/app.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/app.js"
     }
