@@ -6,6 +6,6 @@ const {
 const router = express.Router();
 
 router.post("/create", createDeployment);
-router.get("/user/:userId", getAllUserDeployments);
+router.get("/user/:farcasterId", getAllUserDeployments);
 
 module.exports = router;
