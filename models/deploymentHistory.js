@@ -12,6 +12,9 @@ const DeploymentHistorySchema = new mongoose.Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
+    url: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
