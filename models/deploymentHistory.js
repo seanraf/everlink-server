@@ -15,6 +15,9 @@ const DeploymentHistorySchema = new mongoose.Schema(
     url: {
       type: String,
     },
+    arweaveUrl: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
