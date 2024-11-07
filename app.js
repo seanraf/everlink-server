@@ -6,7 +6,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const linkRoutes = require("./routes/linkRoutes");
-const DeploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
+const deploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
+const crossmintRoutes = require("./routes/crossmintRoutes");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,7 +29,8 @@ mongoose
 
 app.use("/api/users", userRoutes);
 app.use("/api/links", linkRoutes);
-app.use("/api/deploymentHistory", DeploymentHistoryRoutes);
+app.use("/api/deploymentHistory", deploymentHistoryRoutes);
+app.use("/api/crossmint", crossmintRoutes);
 
 app.use("/", (req, res) =>
   res.json({
