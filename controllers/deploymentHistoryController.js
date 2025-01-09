@@ -53,7 +53,7 @@ const getAllUserDeployments = async (req, res) => {
 // Controller function to update the URL field
 const updateDeploymentUrl = async (req, res) => {
   const { taskId } = req.params; // Assuming taskId is passed as a URL parameter
-  const { url, arweaveUrl, customUrl } = req.body; // Assuming new URL is sent in the request body
+  const { url, arweaveUrl, customUrl, shortUrlId } = req.body; // Assuming new URL is sent in the request body
 
   try {
     // Find the document by taskId and update the URL field

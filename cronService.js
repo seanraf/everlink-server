@@ -2,10 +2,33 @@ const cron = require("node-cron");
 const axios = require("axios");
 const DeploymentHistoryModel = require("./models/deploymentHistory");
 
+
+const getHtmlPath = async (retrievedHash) => {
+  try {
+    const url = `${process.env.EVERLAND_DOMAIN_BASE_URL}/${retrievedHash}`;
+    const urlResponse = await axios.get(url);
+    const indexHtmlId = urlResponse.data.paths?.['index.html']?.id;
+
+    if (indexHtmlId) {
+      return indexHtmlId;
+    } else {
+      console.error('Index HTML ID not found in response.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving final URL:', error);
+  }
+};
+
+const createCustomURL = async (htmlPath) => {
+  const customizeUrl = `${process.env.EVERLAND_DOMAIN_BASE_URL}/${htmlPath}`;
+    return customizeUrl;
+};
+
 const pollForDomain = async (taskId) => {
   try {
     const taskResponse = await axios.get(
-      `${process.env.FOREVERLAND_HOSTING_BASE_URL}/tasks/${taskId}`,
+      `${process.env.EVERLAND_HOSTING_BASE_URL}/tasks/${taskId}`,
       {
         headers: {
           token: process.env.TOKEN_ID,
@@ -13,11 +36,12 @@ const pollForDomain = async (taskId) => {
       }
     );
     const retrievedHash = taskResponse?.data?.content?.hash;
-    const arweaveHash = taskResponse?.data?.content?.domains?.[0];
 
-    console.log("ArweaveHash", arweaveHash);
     if (retrievedHash) {
-      return retrievedHash;
+      const htmlPath = await getHtmlPath(retrievedHash);
+      const customizeUrl = await createCustomURL(htmlPath);
+
+      return customizeUrl;
     }
   } catch (error) {
     console.error("Error checking task status:", error);
@@ -28,12 +52,11 @@ const pollForDomain = async (taskId) => {
 const checkDeploymentStatus = async (taskId) => {
   try {
     const response = await axios.get(
-      `${process.env.FOREVERLAND_HOSTING_BASE_URL}/tasks/${taskId}`,
+      `${process.env.EVERLAND_HOSTING_BASE_URL}/tasks/${taskId}`,
       {
         headers: { token: process.env.TOKEN_ID },
       }
     );
-    console.log("Response", response);
     return response.data; // This should include deployment status and URL
   } catch (error) {
     console.error(
@@ -78,19 +101,20 @@ const startCronJob = () => {
         );
 
         const result = await checkDeploymentStatus(deployment.taskId);
-
+        
         if (result.content.status === "SUCCESS") {
+          
           const pollDomain = await pollForDomain(deployment.taskId);
-          console.log("PollDomain", pollDomain);
+          
           console.log(
             `Deployment completed. Updating URL for taskId: ${deployment.taskId}`
           );
 
-          const customUrl = await DeploymentHistoryModel.find({
+          const deploymentData = await DeploymentHistoryModel.find({
             taskId: deployment.taskId,
           });
-          console.log("customUrl", customUrl);
-          await updateShortIoUrl(deployment.shortUrlId, result.url);
+
+          await updateShortIoUrl(deploymentData[0].shortUrlId, pollDomain);
         } else {
           console.log(
             `Deployment still in progress for taskId: ${deployment.taskId}`
