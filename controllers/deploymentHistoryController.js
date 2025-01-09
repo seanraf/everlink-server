@@ -1,7 +1,6 @@
 const DeploymentHistoryModel = require("../models/deploymentHistory");
 const User = require("../models/userModel.js");
 
-// Register User
 const createDeployment = async (req, res) => {
   const { content, farcasterId } = req.body;
   try {
@@ -54,13 +53,13 @@ const getAllUserDeployments = async (req, res) => {
 // Controller function to update the URL field
 const updateDeploymentUrl = async (req, res) => {
   const { taskId } = req.params; // Assuming taskId is passed as a URL parameter
-  const { url, arweaveUrl } = req.body; // Assuming new URL is sent in the request body
+  const { url, arweaveUrl, customUrl} = req.body; // Assuming new URL is sent in the request body
 
   try {
     // Find the document by taskId and update the URL field
     const updatedDeployment = await DeploymentHistoryModel.findOneAndUpdate(
       { taskId }, // Filter by taskId
-      { url, arweaveUrl }, // Update only the URL field
+      { customUrl, url, arweaveUrl }, // Update only the URL field
       { new: true, runValidators: true } // Options: return the updated document and run validators
     );
 
