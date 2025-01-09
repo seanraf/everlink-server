@@ -8,6 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const linkRoutes = require("./routes/linkRoutes");
 const deploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
 const crossmintRoutes = require("./routes/crossmintRoutes");
+const { startCronJob } = require("./cronService");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,6 +38,9 @@ app.use("/", (req, res) =>
     message: "Hello World",
   })
 );
+
+// Start the cron job
+startCronJob();
 
 // Start the server
 const PORT = process.env.PORT || 5000;
