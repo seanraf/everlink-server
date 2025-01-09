@@ -18,9 +18,12 @@ const DeploymentHistorySchema = new mongoose.Schema(
     arweaveUrl: {
       type: String,
     },
-    customUrl:{
+    customUrl: {
       type: String,
-    }
+    },
+    shortUrlId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
