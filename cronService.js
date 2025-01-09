@@ -1,6 +1,6 @@
 const cron = require("node-cron");
 const axios = require("axios");
-const DeploymentHistoryModel = require("../models/deploymentHistory");
+const DeploymentHistoryModel = require("./models/deploymentHistory");
 
 // Function to check deployment status on Foreverland
 const checkDeploymentStatus = async (taskId) => {
