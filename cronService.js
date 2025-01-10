@@ -99,6 +99,8 @@ const startCronJob = () => {
       if (!deployments || deployments.length === 0) {
         console.log("No deployments to update.");
         return; // Exit early if no deployments found
+      } else {
+        console.log(`${deployments.length} pending deployments to update.`);
       }
       for (const deployment of deployments) {
         console.log(
