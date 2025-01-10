@@ -36,10 +36,6 @@
       "dest": "/app.js"
     },
     {
-      "src": "/cron-job",
-      "dest": "/cron-job.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "/app.js"
     }
