@@ -2,27 +2,26 @@ const cron = require("node-cron");
 const axios = require("axios");
 const DeploymentHistoryModel = require("./models/deploymentHistory");
 
-
 const getHtmlPath = async (retrievedHash) => {
   try {
     const url = `${process.env.EVERLAND_DOMAIN_BASE_URL}/${retrievedHash}`;
     const urlResponse = await axios.get(url);
-    const indexHtmlId = urlResponse.data.paths?.['index.html']?.id;
+    const indexHtmlId = urlResponse.data.paths?.["index.html"]?.id;
 
     if (indexHtmlId) {
       return indexHtmlId;
     } else {
-      console.error('Index HTML ID not found in response.');
+      console.error("Index HTML ID not found in response.");
       return null;
     }
   } catch (error) {
-    console.error('Error retrieving final URL:', error);
+    console.error("Error retrieving final URL:", error);
   }
 };
 
 const createCustomURL = async (htmlPath) => {
   const customizeUrl = `${process.env.EVERLAND_DOMAIN_BASE_URL}/${htmlPath}`;
-    return customizeUrl;
+  return customizeUrl;
 };
 
 const pollForDomain = async (taskId) => {
@@ -93,7 +92,9 @@ const startCronJob = () => {
 
     try {
       // Fetch documents with empty arweaveUrl
-      const deployments = await DeploymentHistoryModel.find({ arweaveUrl: "" });
+      const deployments = await DeploymentHistoryModel.find({
+        deployed: false,
+      });
 
       for (const deployment of deployments) {
         console.log(
@@ -101,11 +102,10 @@ const startCronJob = () => {
         );
 
         const result = await checkDeploymentStatus(deployment.taskId);
-        
+
         if (result.content.status === "SUCCESS") {
-          
           const pollDomain = await pollForDomain(deployment.taskId);
-          
+
           console.log(
             `Deployment completed. Updating URL for taskId: ${deployment.taskId}`
           );
@@ -115,6 +115,17 @@ const startCronJob = () => {
           });
 
           await updateShortIoUrl(deploymentData[0].shortUrlId, pollDomain);
+
+          const fieldsToUpdate = {
+            deployed: true,
+            arweaveUrl: result.content.domains[0],
+          };
+
+          await DeploymentHistoryModel.findOneAndUpdate(
+            { _id: deploymentData._id },
+            fieldsToUpdate,
+            { new: true, runValidators: true }
+          );
         } else {
           console.log(
             `Deployment still in progress for taskId: ${deployment.taskId}`

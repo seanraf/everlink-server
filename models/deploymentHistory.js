@@ -24,9 +24,16 @@ const DeploymentHistorySchema = new mongoose.Schema(
     shortUrlId: {
       type: String,
     },
+    deployed: {
+      type: Boolean,
+      default: false, // Default value set to false
+    },
   },
   { timestamps: true }
 );
 
-const Page = mongoose.model("deployment_history", DeploymentHistorySchema);
-module.exports = Page;
+const DeploymentHistory = mongoose.model(
+  "deployment_history",
+  DeploymentHistorySchema
+);
+module.exports = DeploymentHistory;
