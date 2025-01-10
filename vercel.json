@@ -40,10 +40,10 @@
       "dest": "/app.js"
     }
   ],
-  "functions": {
-    "cron-job": {
-      "schedule": "0 * * * *",
-      "handler": "app.js"
+  "crons": [
+    {
+      "path": "/api/cron-job",
+      "schedule": "*/5 * * * *"
     }
-  }
+  ]
 }
