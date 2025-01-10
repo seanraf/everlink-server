@@ -87,7 +87,7 @@ const updateShortIoUrl = async (shortId, newDestination) => {
 
 // Cron job function
 const startCronJob = () => {
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("*/5 * * * *", async () => {
     console.log("Running cron job to update deployment URLs...");
 
     try {

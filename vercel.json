@@ -42,7 +42,7 @@
   ],
   "functions": {
     "cron-job": {
-      "schedule": "0 * * * *",
+      "schedule": "*/5 * * * *",
       "handler": "app.js"
     }
   }
