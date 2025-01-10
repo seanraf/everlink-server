@@ -96,6 +96,10 @@ const startCronJob = () => {
         deployed: false,
       });
 
+      if (!deployments || deployments.length === 0) {
+        console.log("No deployments to update.");
+        return; // Exit early if no deployments found
+      }
       for (const deployment of deployments) {
         console.log(
           `Checking deployment status for taskId: ${deployment.taskId}`
@@ -122,7 +126,7 @@ const startCronJob = () => {
           };
 
           await DeploymentHistoryModel.findOneAndUpdate(
-            { _id: deploymentData._id },
+            { taskId: deployment.taskId },
             fieldsToUpdate,
             { new: true, runValidators: true }
           );
