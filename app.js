@@ -49,6 +49,11 @@ cron.schedule("* * * * *", () => {
   console.log("Cron job running every minute: ", new Date().toLocaleString());
 });
 
+// Schedule a cron job to run every minute
+cron.schedule("* * * * *", () => {
+  console.log("Cron job running every minute: ", new Date().toLocaleString());
+});
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
