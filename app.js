@@ -8,7 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const linkRoutes = require("./routes/linkRoutes");
 const deploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
 const crossmintRoutes = require("./routes/crossmintRoutes");
-const { startCronJob } = require("./cronService");
+const { startCronJob } = require("./cron-job");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
