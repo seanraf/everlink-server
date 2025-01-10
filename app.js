@@ -11,7 +11,7 @@ const linkRoutes = require("./routes/linkRoutes");
 const deploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
 const crossmintRoutes = require("./routes/crossmintRoutes");
 const { GET } = require("./api/cron-job");
-const cron = require("node-cron");
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
