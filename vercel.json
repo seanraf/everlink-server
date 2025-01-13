@@ -36,22 +36,14 @@
       "dest": "/app.js"
     },
     {
-      "src": "/cron-job",
-      "dest": "/app.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "/app.js"
-    },
-    {
-      "src": "/cron-job",
-      "dest": "/cron-job.js"
     }
   ],
   "crons": [
     {
-      "path": "/api/cron-job",
-      "schedule": "*/5 * * * *"
+      "path": "/api/cron",
+      "schedule": "* * * * *"
     }
   ]
 }
