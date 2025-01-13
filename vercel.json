@@ -4,6 +4,10 @@
     {
       "src": "app.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "cron-job.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -38,6 +42,10 @@
     {
       "src": "/(.*)",
       "dest": "/app.js"
+    },
+    {
+      "src": "/cron-job",
+      "dest": "/cron-job.js"
     }
   ],
   "crons": [
