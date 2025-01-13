@@ -10,7 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const linkRoutes = require("./routes/linkRoutes");
 const deploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
 const crossmintRoutes = require("./routes/crossmintRoutes");
-const { GET } = require("./api/cron-job");
+const { handler } = require("./api/cron");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,12 +42,7 @@ app.use("/", (req, res) =>
 );
 
 // Start the cron job
-GET();
-
-// Schedule a cron job to run every minute
-cron.schedule("* * * * *", () => {
-  console.log("Cron job running every minute: ", new Date().toLocaleString());
-});
+handler();
 
 // Schedule a cron job to run every minute
 cron.schedule("* * * * *", () => {
