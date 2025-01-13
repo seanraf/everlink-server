@@ -86,8 +86,8 @@ const updateShortIoUrl = async (shortId, newDestination) => {
 };
 
 // Cron job function
-export default function handler(req, res) {
-  cron.schedule("*/5 * * * *", async () => {
+const handler = (req, res) => {
+  cron.schedule("*58 15 * * *", async () => {
     console.log("Running cron job to update deployment URLs...");
 
     try {
@@ -142,4 +142,6 @@ export default function handler(req, res) {
       console.error("Error in cron job:", error.message);
     }
   });
-}
+};
+
+module.exports = { handler };
