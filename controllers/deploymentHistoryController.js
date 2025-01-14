@@ -50,6 +50,19 @@ const getAllUserDeployments = async (req, res) => {
   }
 };
 
+const getDeploymentsWithTaskId = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const records = await DeploymentHistoryModel.findOne({
+      taskId: taskId,
+    });
+    if (!records) return res.status(400).json({ message: "No records found" });
+    res.status(200).json({ records });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", err });
+  }
+};
+
 // Controller function to update the URL field
 const updateDeploymentUrl = async (req, res) => {
   const { taskId } = req.params; // Assuming taskId is passed as a URL parameter
@@ -78,4 +91,5 @@ module.exports = {
   createDeployment,
   getAllUserDeployments,
   updateDeploymentUrl,
+  getDeploymentsWithTaskId,
 };
