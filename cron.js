@@ -91,7 +91,6 @@ const handler = (req, res) => {
     console.log("Running cron job to update deployment URLs...");
 
     try {
-      // Fetch documents with empty arweaveUrl
       const deployments = await DeploymentHistoryModel.find({
         deployed: false,
       });
