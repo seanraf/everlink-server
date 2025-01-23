@@ -36,7 +36,7 @@ app.use("/api/crossmint", crossmintRoutes);
 
 app.use("/", (req, res) =>
   res.json({
-    message: "Hello World",
+    message: "Hello World!",
   })
 );
 
