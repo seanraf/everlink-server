@@ -14,7 +14,7 @@ const { handler } = require("./cron");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(helmet()); // Adds security headers
+app.use(helmet());
 app.use(
   cors({
     origin: "*",
