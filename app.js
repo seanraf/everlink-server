@@ -1,7 +1,6 @@
 require("dotenv").config();
 
 const express = require("express");
-const cron = require("node-cron");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
@@ -10,7 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const linkRoutes = require("./routes/linkRoutes");
 const deploymentHistoryRoutes = require("./routes/deploymentHistoryRoutes");
 const crossmintRoutes = require("./routes/crossmintRoutes");
-const { handler } = require("./api/cron");
+const { handler } = require("./cron");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));

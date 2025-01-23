@@ -1,6 +1,6 @@
 const cron = require("node-cron");
 const axios = require("axios");
-const DeploymentHistoryModel = require("../models/deploymentHistory");
+const DeploymentHistoryModel = require("./models/deploymentHistory");
 
 const getHtmlPath = async (retrievedHash) => {
   try {
@@ -87,7 +87,7 @@ const updateShortIoUrl = async (shortId, newDestination) => {
 
 // Cron job function
 const handler = (req, res) => {
-  cron.schedule("27 16 * * *", async () => {
+  cron.schedule("/5 * * * *", async () => {
     console.log("Running cron job to update deployment URLs...");
 
     try {
