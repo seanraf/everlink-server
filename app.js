@@ -19,7 +19,7 @@ app.use(
   cors({
     origin: "*",
   })
-); // Enable CORS
+);
 
 // Connect to MongoDB
 mongoose
@@ -34,11 +34,18 @@ app.use("/api/links", linkRoutes);
 app.use("/api/deploymentHistory", deploymentHistoryRoutes);
 app.use("/api/crossmint", crossmintRoutes);
 
-app.use("/", (req, res) =>
-  res.json({
-    message: "Hello World!",
-  })
-);
+// Health check or base route
+app.get("/", (req, res) => {
+  res.json({ message: "Everlink Server is running" });
+});
+
+// 404 Route Handler
+app.use((req, res, next) => {
+  res.status(404).json({
+    error: "Route not found",
+    message: `The requested URL ${req.originalUrl} was not found on this server.`,
+  });
+});
 
 // Start the cron job
 handler();
