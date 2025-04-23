@@ -13,7 +13,7 @@ const registerUser = async (req, res) => {
     }
     const userExists = await User.findOne({ farcasterId: fid });
     if (userExists)
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(409).json({ message: "User already exists" });
 
     const newUser = new User({ farcasterId: fid, username });
     await newUser.save();
