@@ -28,6 +28,11 @@ const DeploymentHistorySchema = new mongoose.Schema(
       type: Boolean,
       default: false, // Default value set to false
     },
+    provider: {
+      type: String,
+      enum: ["farcaster", "gmail"],
+      required: true,
+    },
   },
   { timestamps: true }
 );
