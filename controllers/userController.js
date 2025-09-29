@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Provider = require("../enums/providerEnum");
 
 // Register User
 const registerUser = async (req, res) => {
@@ -16,7 +17,7 @@ const registerUser = async (req, res) => {
 
     let userExists;
 
-    if (provider === "farcaster") {
+    if (provider === provider.FARCASTER) {
       if (!id || !username) {
         return res
           .status(400)
@@ -35,7 +36,7 @@ const registerUser = async (req, res) => {
         .json({ message: "Farcaster user registered successfully" });
     }
 
-    if (provider === "gmail") {
+    if (provider === Provider.GMAIL) {
       if (!id || !email) {
         return res
           .status(400)

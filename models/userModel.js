@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Provider = require("../enums/providerEnum");
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,21 +11,21 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: function () {
-        return this.provider === "farcaster";
+        return this.provider === provider.FARCASTER;
       },
       unique: true,
     },
     email: {
       type: String,
       required: function () {
-        return this.provider === "gmail";
+        return this.provider === Provider.GMAIL;
       },
       unique: true,
       sparse: true,
     },
     provider: {
       type: String,
-      enum: ["farcaster", "gmail"],
+      enum: Object.values(Provider),
       required: true,
     },
   },
