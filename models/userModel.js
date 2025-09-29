@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: function () {
-        return this.provider === provider.FARCASTER;
+        return this.provider === Provider.FARCASTER;
       },
       unique: true,
     },

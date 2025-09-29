@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
 
     let userExists;
 
-    if (provider === provider.FARCASTER) {
+    if (provider === Provider.FARCASTER) {
       if (!id || !username) {
         return res
           .status(400)
