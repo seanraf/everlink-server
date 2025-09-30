@@ -1,15 +1,32 @@
 const mongoose = require("mongoose");
+const Provider = require("../enums/providerEnum");
 
 const userSchema = new mongoose.Schema(
   {
-    farcasterId: {
-      type: String,
-      required: true,
-    },
-    username: {
+    id: {
       type: String,
       required: true,
       unique: true,
+    },
+    username: {
+      type: String,
+      required: function () {
+        return this.provider === Provider.FARCASTER;
+      },
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: function () {
+        return this.provider === Provider.GMAIL;
+      },
+      unique: true,
+      sparse: true,
+    },
+    provider: {
+      type: String,
+      enum: Object.values(Provider),
+      required: true,
     },
   },
   { timestamps: true }

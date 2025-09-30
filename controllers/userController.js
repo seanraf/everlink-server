@@ -1,23 +1,59 @@
 const User = require("../models/userModel");
+const Provider = require("../enums/providerEnum");
 
 // Register User
 const registerUser = async (req, res) => {
-  const { fid, username } = req.body;
+  const { id, username, email, provider } = req.body;
   try {
     console.log({
-      fid,
       username,
+      id,
+      email,
+      provider,
     });
-    if (!fid || !username) {
-      return res.status(400).json({ message: "fid and username are required" });
+    if (!provider) {
+      return res.status(400).json({ message: "Provider is required" });
     }
-    const userExists = await User.findOne({ farcasterId: fid });
-    if (userExists)
-      return res.status(409).json({ message: "User already exists" });
 
-    const newUser = new User({ farcasterId: fid, username });
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+    let userExists;
+
+    if (provider === Provider.FARCASTER) {
+      if (!id || !username) {
+        return res
+          .status(400)
+          .json({ message: "id and username are required" });
+      }
+      userExists = await User.findOne({ id });
+      if (userExists)
+        return res
+          .status(409)
+          .json({ message: "Farcaster user already exists" });
+
+      const newUser = new User({ id, username, provider });
+      await newUser.save();
+      return res
+        .status(201)
+        .json({ message: "Farcaster user registered successfully" });
+    }
+
+    if (provider === Provider.GMAIL) {
+      if (!id || !email) {
+        return res
+          .status(400)
+          .json({ message: "gmailId and email are required" });
+      }
+      userExists = await User.findOne({ id });
+      if (userExists)
+        return res.status(409).json({ message: "Gmail user already exists" });
+
+      const newUser = new User({ id, email, provider });
+      await newUser.save();
+      return res
+        .status(201)
+        .json({ message: "Gmail user registered successfully" });
+    }
+
+    res.status(400).json({ message: "Unsupported provider" });
   } catch (err) {
     res.status(500).json({ message: "Server error", err });
   }

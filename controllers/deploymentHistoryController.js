@@ -2,19 +2,20 @@ const DeploymentHistoryModel = require("../models/deploymentHistory");
 const User = require("../models/userModel.js");
 
 const createDeployment = async (req, res) => {
-  const { content, farcasterId } = req.body;
+  const { content, id, provider } = req.body;
   try {
-    if (!content?.domainList?.length || !content?.taskId || !farcasterId) {
+    if (!content?.domainList?.length || !content?.taskId || !id) {
       return res
         .status(400)
-        .json({ message: "Domain List, TaskId and farcasterId are required" });
+        .json({ message: "Domain List, TaskId, id and provider are required" });
     }
 
-    const userExists = await User.findOne({ farcasterId: farcasterId });
+    const userExists = await User.findOne({ id: id });
     if (userExists) {
       const newRecord = new DeploymentHistoryModel({
         domainList: content?.domainList,
         taskId: content?.taskId,
+        provider: provider,
         createdBy: userExists?._id,
       });
       await newRecord.save();
@@ -32,9 +33,9 @@ const createDeployment = async (req, res) => {
 // Login User
 const getAllUserDeployments = async (req, res) => {
   try {
-    const { farcasterId } = req.params;
+    const { id } = req.params;
 
-    const userExists = await User.findOne({ farcasterId: farcasterId });
+    const userExists = await User.findOne({ id: id });
     if (userExists) {
       const records = await DeploymentHistoryModel.find({
         createdBy: userExists?._id,

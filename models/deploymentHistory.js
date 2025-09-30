@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Provider = require("../enums/providerEnum");
 
 const DeploymentHistorySchema = new mongoose.Schema(
   {
@@ -27,6 +28,11 @@ const DeploymentHistorySchema = new mongoose.Schema(
     deployed: {
       type: Boolean,
       default: false, // Default value set to false
+    },
+    provider: {
+      type: String,
+      enum: Object.values(Provider),
+      required: true,
     },
   },
   { timestamps: true }
