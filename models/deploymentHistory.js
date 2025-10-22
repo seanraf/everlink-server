@@ -3,18 +3,21 @@ const Provider = require("../enums/providerEnum");
 
 const DeploymentHistorySchema = new mongoose.Schema(
   {
-    domainList: [String],
-    taskId: {
+    ipfsTaskId: {
       type: String,
       required: true,
+    },
+    ipfsDomainList: [String],
+    arweaveTransactionId: {
+      type: String,
+    },
+    ipfsHash: {
+      type: String,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
-    },
-    url: {
-      type: String,
     },
     arweaveUrl: {
       type: String,

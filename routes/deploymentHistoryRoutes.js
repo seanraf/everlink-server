@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/create", createDeployment);
 router.get("/user/:farcasterId", getAllUserDeployments);
-router.get("/:taskId", getDeploymentsWithTaskId);
-router.put("/:taskId", updateDeploymentUrl);
+router.get("/:ipfsTaskId", getDeploymentsWithTaskId);
+router.put("/:ipfsTaskId", updateDeploymentUrl);
 
 module.exports = router;
