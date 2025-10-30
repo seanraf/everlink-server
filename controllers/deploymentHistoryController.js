@@ -1,10 +1,10 @@
-const DeploymentHistoryModel = require("../models/deploymentHistory");
+const DeploymentHistoryModel = require("../models/deploymentHistory.js");
 const User = require("../models/userModel.js");
 
 const createDeployment = async (req, res) => {
-  const { content, id, provider } = req.body;
+  const { id, arweaveTransactionId, ipfsContent, provider } = req.body;
   try {
-    if (!content?.domainList?.length || !content?.taskId || !id) {
+    if (!arweaveTransactionId || !ipfsContent?.taskId || !id) {
       return res
         .status(400)
         .json({ message: "Domain List, TaskId, id and provider are required" });
@@ -13,8 +13,10 @@ const createDeployment = async (req, res) => {
     const userExists = await User.findOne({ id: id });
     if (userExists) {
       const newRecord = new DeploymentHistoryModel({
-        domainList: content?.domainList,
-        taskId: content?.taskId,
+        ipfsTaskId: ipfsContent?.taskId,
+        ipfsDomainList: ipfsContent?.domainList,
+        arweaveTransactionId: arweaveTransactionId,
+        ipfsHash: ipfsContent?.fileHash,
         provider: provider,
         createdBy: userExists?._id,
       });
@@ -53,9 +55,9 @@ const getAllUserDeployments = async (req, res) => {
 
 const getDeploymentsWithTaskId = async (req, res) => {
   try {
-    const { taskId } = req.params;
+    const { ipfsTaskId } = req.params;
     const records = await DeploymentHistoryModel.findOne({
-      taskId: taskId,
+      ipfsTaskId: ipfsTaskId,
     });
     if (!records) return res.status(400).json({ message: "No records found" });
     res.status(200).json({ records });
@@ -66,17 +68,21 @@ const getDeploymentsWithTaskId = async (req, res) => {
 
 // Controller function to update the URL field
 const updateDeploymentUrl = async (req, res) => {
-  const { taskId } = req.params; // Assuming taskId is passed as a URL parameter
-  const { url, arweaveUrl, customUrl, shortUrlId } = req.body; // Assuming new URL is sent in the request body
-
   try {
+    const { ipfsTaskId } = req.params; // Assuming taskId is passed as a URL parameter
+    const { arweaveUrl, customUrl, shortUrlId } = req.body; // Assuming new URL is sent in the request body
     // Find the document by taskId and update the URL field
     const updatedDeployment = await DeploymentHistoryModel.findOneAndUpdate(
-      { taskId }, // Filter by taskId
-      { customUrl, url, arweaveUrl, shortUrlId }, // Update only the URL field
+      { ipfsTaskId: ipfsTaskId }, // Filter by taskId
+      {
+        $set: {
+          customUrl: customUrl,
+          arweaveUrl: arweaveUrl,
+          shortUrlId: shortUrlId,
+        },
+      }, // Update only the URL field
       { new: true, runValidators: true } // Options: return the updated document and run validators
     );
-
     if (!updatedDeployment) {
       return res.status(404).json({ message: "Deployment not found" });
     }

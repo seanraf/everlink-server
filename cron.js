@@ -103,34 +103,42 @@ const handler = (req, res) => {
       }
       for (const deployment of deployments) {
         console.log(
-          `Checking deployment status for taskId: ${deployment.taskId}`
+          `Checking deployment status for taskId: ${deployment.ipfsTaskId}`
         );
 
-        const result = await checkDeploymentStatus(deployment.taskId);
-
+        const result = await checkDeploymentStatus(deployment.ipfsTaskId);
         if (result.content.status === "SUCCESS") {
-          const pollDomain = await pollForDomain(deployment.taskId);
-
           console.log(
-            `Deployment completed. Updating URL for taskId: ${deployment.taskId}`
+            `Deployment completed. Updating URL for taskId: ${deployment.ipfsTaskId}`
           );
 
           const deploymentData = await DeploymentHistoryModel.find({
-            taskId: deployment.taskId,
+            ipfsTaskId: deployment.ipfsTaskId,
           });
-
-          await updateShortIoUrl(deploymentData[0].shortUrlId, pollDomain);
-
-          const fieldsToUpdate = {
-            deployed: true,
-            arweaveUrl: result.content.domains[0],
-          };
-
-          await DeploymentHistoryModel.findOneAndUpdate(
-            { taskId: deployment.taskId },
-            fieldsToUpdate,
-            { new: true, runValidators: true }
+          const match = deploymentData.find(
+            (item) =>
+              item.ipfsTaskId === deployment.ipfsTaskId &&
+              item.arweaveUrl &&
+              item.arweaveUrl.trim() !== ""
           );
+          const updatedAt = match.updatedAt;
+          const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+          if (match && updatedAt < oneHourAgo) {
+            await updateShortIoUrl(match?.shortUrlId, match?.arweaveUrl);
+            const fieldsToUpdate = {
+              deployed: true,
+            };
+            await DeploymentHistoryModel.findOneAndUpdate(
+              { ipfsTaskId: deployment.ipfsTaskId },
+              fieldsToUpdate,
+              { new: true, runValidators: true }
+            );
+          } else {
+            console.log(
+              "❌ arweaveUrl does NOT exist yet for:",
+              deployment.ipfsTaskId
+            );
+          }
         } else {
           console.log(
             `Deployment still in progress for taskId: ${deployment.taskId}`
