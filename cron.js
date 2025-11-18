@@ -118,13 +118,16 @@ const handler = (req, res) => {
           const match = deploymentData.find(
             (item) =>
               item.ipfsTaskId === deployment.ipfsTaskId &&
-              item.arweaveUrl &&
-              item.arweaveUrl.trim() !== ""
+              item.arweaveTransactionId &&
+              item.arweaveTransactionId.trim() !== ""
           );
           const updatedAt = match.updatedAt;
           const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
           if (match && updatedAt < oneHourAgo) {
-            await updateShortIoUrl(match?.shortUrlId, match?.arweaveUrl);
+            await updateShortIoUrl(
+              match?.shortUrlId,
+              match?.arweaveTransactionId
+            );
             const fieldsToUpdate = {
               deployed: true,
             };
@@ -135,8 +138,7 @@ const handler = (req, res) => {
             );
           } else {
             console.log(
-              "❌ arweaveUrl does NOT exist yet for:",
-              deployment.ipfsTaskId
+              `⏳ Skipping deployment ${deployment.ipfsTaskId}: last update was less than 1 hour ago`
             );
           }
         } else {

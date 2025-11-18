@@ -70,23 +70,22 @@ const getDeploymentsWithTaskId = async (req, res) => {
 const updateDeploymentUrl = async (req, res) => {
   try {
     const { ipfsTaskId } = req.params; // Assuming taskId is passed as a URL parameter
-    const { arweaveUrl, customUrl, shortUrlId } = req.body; // Assuming new URL is sent in the request body
+    const { arweaveUrl, customUrl, shortUrlId, txHash } = req.body;
+    const updateFields = {};
+    if (customUrl) updateFields.customUrl = customUrl;
+    if (arweaveUrl) updateFields.arweaveUrl = arweaveUrl;
+    if (shortUrlId) updateFields.shortUrlId = shortUrlId;
+    if (txHash) updateFields.txHash = txHash;
+
     // Find the document by taskId and update the URL field
     const updatedDeployment = await DeploymentHistoryModel.findOneAndUpdate(
       { ipfsTaskId: ipfsTaskId }, // Filter by taskId
-      {
-        $set: {
-          customUrl: customUrl,
-          arweaveUrl: arweaveUrl,
-          shortUrlId: shortUrlId,
-        },
-      }, // Update only the URL field
+      { $set: updateFields },
       { new: true, runValidators: true } // Options: return the updated document and run validators
     );
     if (!updatedDeployment) {
       return res.status(404).json({ message: "Deployment not found" });
     }
-
     res.status(200).json(updatedDeployment); // Send back the updated document
   } catch (error) {
     console.error("Error updating deployment URL:", error);

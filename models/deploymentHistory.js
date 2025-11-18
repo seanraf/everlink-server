@@ -28,6 +28,9 @@ const DeploymentHistorySchema = new mongoose.Schema(
     shortUrlId: {
       type: String,
     },
+    txHash: {
+      type: String,
+    },
     deployed: {
       type: Boolean,
       default: false, // Default value set to false
