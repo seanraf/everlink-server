@@ -70,10 +70,10 @@ const getDeploymentsWithTaskId = async (req, res) => {
 const updateDeploymentUrl = async (req, res) => {
   try {
     const { ipfsTaskId } = req.params; // Assuming taskId is passed as a URL parameter
-    const { arweaveUrl, customUrl, shortUrlId, txHash } = req.body;
+    const { arweaveHash, customUrl, shortUrlId, txHash } = req.body;
     const updateFields = {};
     if (customUrl) updateFields.customUrl = customUrl;
-    if (arweaveUrl) updateFields.arweaveUrl = arweaveUrl;
+    if (arweaveHash) updateFields.arweaveHash = arweaveHash;
     if (shortUrlId) updateFields.shortUrlId = shortUrlId;
     if (txHash) updateFields.txHash = txHash;
 
@@ -81,7 +81,7 @@ const updateDeploymentUrl = async (req, res) => {
     const updatedDeployment = await DeploymentHistoryModel.findOneAndUpdate(
       { ipfsTaskId: ipfsTaskId }, // Filter by taskId
       { $set: updateFields },
-      { new: true, runValidators: true } // Options: return the updated document and run validators
+      { new: true, runValidators: true }, // Options: return the updated document and run validators
     );
     if (!updatedDeployment) {
       return res.status(404).json({ message: "Deployment not found" });

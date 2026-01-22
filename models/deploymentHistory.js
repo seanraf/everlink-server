@@ -19,7 +19,7 @@ const DeploymentHistorySchema = new mongoose.Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
-    arweaveUrl: {
+    arweaveHash: {
       type: String,
     },
     customUrl: {
@@ -41,11 +41,11 @@ const DeploymentHistorySchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const DeploymentHistory = mongoose.model(
   "deployment_history",
-  DeploymentHistorySchema
+  DeploymentHistorySchema,
 );
 module.exports = DeploymentHistory;
