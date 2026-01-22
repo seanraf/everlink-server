@@ -32,7 +32,7 @@ const pollForDomain = async (taskId) => {
         headers: {
           token: process.env.TOKEN_ID,
         },
-      }
+      },
     );
     const retrievedHash = taskResponse?.data?.content?.hash;
 
@@ -54,13 +54,13 @@ const checkDeploymentStatus = async (taskId) => {
       `${process.env.EVERLAND_HOSTING_BASE_URL}/tasks/${taskId}`,
       {
         headers: { token: process.env.TOKEN_ID },
-      }
+      },
     );
     return response.data; // This should include deployment status and URL
   } catch (error) {
     console.error(
       `Error checking deployment status for taskId ${taskId}:`,
-      error.message
+      error.message,
     );
     return null;
   }
@@ -71,13 +71,13 @@ const updateShortIoUrl = async (shortId, newDestination) => {
   try {
     await axios.post(
       `${process.env.SHORT_IO_BASE_URL}/${shortId}`,
-      { originalURL: newDestination },
+      { originalURL: `https://ar-io.net/${newDestination}` },
       {
         headers: {
           Authorization: process.env.SHORT_IO_API_KEY,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     console.log(`Short.io URL updated successfully to ${newDestination}`);
   } catch (error) {
@@ -103,13 +103,13 @@ const handler = (req, res) => {
       }
       for (const deployment of deployments) {
         console.log(
-          `Checking deployment status for taskId: ${deployment.ipfsTaskId}`
+          `Checking deployment status for taskId: ${deployment.ipfsTaskId}`,
         );
 
         const result = await checkDeploymentStatus(deployment.ipfsTaskId);
         if (result.content.status === "SUCCESS") {
           console.log(
-            `Deployment completed. Updating URL for taskId: ${deployment.ipfsTaskId}`
+            `Deployment completed. Updating URL for taskId: ${deployment.ipfsTaskId}`,
           );
 
           const deploymentData = await DeploymentHistoryModel.find({
@@ -119,14 +119,14 @@ const handler = (req, res) => {
             (item) =>
               item.ipfsTaskId === deployment.ipfsTaskId &&
               item.arweaveTransactionId &&
-              item.arweaveTransactionId.trim() !== ""
+              item.arweaveTransactionId.trim() !== "",
           );
           const updatedAt = match.updatedAt;
           const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
           if (match && updatedAt < oneHourAgo) {
             await updateShortIoUrl(
               match?.shortUrlId,
-              match?.arweaveTransactionId
+              match?.arweaveTransactionId,
             );
             const fieldsToUpdate = {
               deployed: true,
@@ -134,16 +134,16 @@ const handler = (req, res) => {
             await DeploymentHistoryModel.findOneAndUpdate(
               { ipfsTaskId: deployment.ipfsTaskId },
               fieldsToUpdate,
-              { new: true, runValidators: true }
+              { new: true, runValidators: true },
             );
           } else {
             console.log(
-              `⏳ Skipping deployment ${deployment.ipfsTaskId}: last update was less than 1 hour ago`
+              `⏳ Skipping deployment ${deployment.ipfsTaskId}: last update was less than 1 hour ago`,
             );
           }
         } else {
           console.log(
-            `Deployment still in progress for taskId: ${deployment.taskId}`
+            `Deployment still in progress for taskId: ${deployment.taskId}`,
           );
         }
       }

@@ -19,7 +19,7 @@ const DeploymentHistorySchema = new mongoose.Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
-    arweaveHash: {
+    arweaveUrl: {
       type: String,
     },
     customUrl: {

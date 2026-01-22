@@ -70,10 +70,10 @@ const getDeploymentsWithTaskId = async (req, res) => {
 const updateDeploymentUrl = async (req, res) => {
   try {
     const { ipfsTaskId } = req.params; // Assuming taskId is passed as a URL parameter
-    const { arweaveHash, customUrl, shortUrlId, txHash } = req.body;
+    const { arweaveUrl, customUrl, shortUrlId, txHash } = req.body;
     const updateFields = {};
     if (customUrl) updateFields.customUrl = customUrl;
-    if (arweaveHash) updateFields.arweaveHash = arweaveHash;
+    if (arweaveUrl) updateFields.arweaveUrl = arweaveUrl;
     if (shortUrlId) updateFields.shortUrlId = shortUrlId;
     if (txHash) updateFields.txHash = txHash;
 
